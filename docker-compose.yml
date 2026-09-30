@@ -1,0 +1,90 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: roomstyle-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-app_password}
+      POSTGRES_DB: ${POSTGRES_DB:-roomai}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -h 127.0.0.1 -p 5432 -U ${POSTGRES_USER:-app} -d ${POSTGRES_DB:-roomai}"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - roomstyle-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: roomstyle-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      APP_NAME: ${APP_NAME:-RoomStyleAI}
+      DEBUG: ${DEBUG:-false}
+
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-app_password}@127.0.0.1:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-roomai}
+
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?JWT_SECRET_KEY must be set in .env}
+      JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-30}
+
+      IMAGE_GENERATION_PROVIDER: ${IMAGE_GENERATION_PROVIDER:-pixazo}
+      PIXAZO_IMAGE_PROVIDER_ENABLED: ${PIXAZO_IMAGE_PROVIDER_ENABLED:-false}
+
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-10}
+      UPLOAD_DIR: /app/storage_data/uploads
+      REPORT_DIR: /app/storage_data/reports
+      GENERATED_DIR: /app/storage_data/generated
+
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:5173}
+
+      DEMO_MODE: ${DEMO_MODE:-false}
+      DEMO_USER_EMAIL: ${DEMO_USER_EMAIL:-demo@roomstyle.ai}
+      DEMO_USER_PASSWORD: ${DEMO_USER_PASSWORD:-}
+      SEED_ON_START: ${SEED_ON_START:-false}
+    network_mode: host
+    volumes:
+      - storage_data:/app/storage_data
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: /api/v1
+    container_name: roomstyle-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    networks:
+      - roomstyle-net
+
+networks:
+  roomstyle-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  storage_data:

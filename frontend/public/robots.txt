@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /$
+Disallow: /dashboard
+Disallow: /analysis
+Disallow: /history
+Disallow: /reports
+Disallow: /profile
+Disallow: /settings

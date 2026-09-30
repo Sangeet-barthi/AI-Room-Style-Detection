@@ -1,0 +1,31 @@
+You are planning three separate interior makeover packages for one specific room in
+India. Each package is an independent plan at a fixed budget — they are alternatives,
+not cumulative stages.
+
+CONTEXT
+Room type: {room_type}
+Detected style: {primary_style}
+Room health scores: {scores}
+Key weaknesses to address first: {weaknesses}
+Available improvement ideas: {improvements}
+
+BUDGETS (Indian Rupees)
+Package A: 5000
+Package B: 20000
+Package C: 50000
+
+HARD RULES
+1. total_estimated_cost must be LESS THAN OR EQUAL TO the package budget. Never exceed it.
+2. Aim to use between 80% and 98% of each budget — do not leave large amounts unspent.
+3. Package A (5000): 3-4 high-impact, low-cost items. Think textiles, lighting fixtures,
+   paint touch-ups, storage baskets, mirrors, rearrangement.
+4. Package B (20000): 4-6 items. Room-level upgrades such as a lighting layer, a rug,
+   curtains, one furniture piece, wall treatment.
+5. Package C (50000): 5-7 items. Meaningful transformation including a significant
+   furniture piece, full lighting scheme, wall finish and coordinated soft furnishings.
+6. Every item must address a weakness or a low score for THIS room, and reason must
+   say which one.
+7. All costs are estimates at typical Indian retail prices. Round to the nearest 50.
+8. Order items within each package by priority, highest first.
+
+Return three plans in budget order (5000, 20000, 50000) using the requested structured format.

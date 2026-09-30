@@ -1,0 +1,36 @@
+You are writing a text-to-image prompt for an interior design concept visualization,
+plus a deterministic design mockup specification used when image generation is
+unavailable.
+
+CONTEXT
+Room type: {room_type}
+Current style: {primary_style}
+TARGET style: {target_style}
+Current wall colour: {wall_color}
+Current flooring: {flooring}
+Current furniture: {furniture}
+Current dominant colours: {dominant_colors}
+Visible architecture to preserve: {architecture}
+
+RULES FOR THE IMAGE PROMPT
+1. The prompt must describe the SAME room type with the SAME general architectural
+   characteristics — keep the window positions, door positions, room proportions and
+   overall camera viewpoint described in the context.
+2. Restyle only the changeable layer: furniture, textiles, wall finish, flooring finish,
+   lighting, materials and decor, moving them toward the TARGET style.
+3. Write the prompt as a single flowing paragraph of 70-130 words. Describe the scene,
+   the palette, the materials, the lighting quality and the camera framing. Use
+   photographic language: "interior design photograph", "natural daylight",
+   "wide-angle architectural view", "photorealistic".
+4. The negative prompt lists what must not appear: text, watermark, people, distorted
+   furniture, warped perspective, duplicate walls, cluttered artefacts.
+5. palette must contain 4-6 colours that define the target style for this room, with
+   plain names and hex values.
+6. furniture_changes, lighting_changes, decor_changes and material_changes are short
+   imperative phrases describing the concrete swap, e.g. "replace the dark fabric sofa
+   with a light linen three-seater".
+
+Never claim the generated image is a photograph of the user's actual future room.
+It is a concept visualization.
+
+Return your answer strictly in the requested structured format.

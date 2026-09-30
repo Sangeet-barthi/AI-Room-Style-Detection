@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------
+   Design tokens. Warm premium neutrals, dark charcoal, off-white.
+   Every component reads from these — no hard-coded colours in TSX.
+---------------------------------------------------------------- */
+@layer base {
+  :root {
+    --canvas: 40 30% 97%;
+    --surface: 0 0% 100%;
+    --elevated: 40 24% 94%;
+    --ink: 30 8% 11%;
+    --muted: 33 7% 43%;
+    --subtle: 35 12% 66%;
+    --line: 35 20% 86%;
+    --accent: 28 33% 41%;
+    --accent-soft: 34 42% 90%;
+    --accent-ink: 0 0% 100%;
+    --charcoal: 30 8% 11%;
+    --success: 128 21% 39%;
+    --warning: 34 51% 47%;
+    --danger: 12 44% 45%;
+    --ring: 28 33% 41%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --canvas: 30 8% 8%;
+    --surface: 30 7% 12%;
+    --elevated: 30 7% 16%;
+    --ink: 38 26% 94%;
+    --muted: 34 9% 65%;
+    --subtle: 33 8% 45%;
+    --line: 30 6% 22%;
+    --accent: 33 45% 62%;
+    --accent-soft: 30 12% 20%;
+    --accent-ink: 30 10% 10%;
+    --charcoal: 30 8% 6%;
+    --success: 128 26% 56%;
+    --warning: 36 62% 62%;
+    --danger: 10 55% 62%;
+    --ring: 33 45% 62%;
+  }
+
+  * {
+    @apply border-line;
+  }
+
+  body {
+    @apply bg-canvas text-ink;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'ss01';
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display font-medium tracking-tight;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-canvas;
+  }
+
+  ::selection {
+    @apply bg-accent/20;
+  }
+
+  /* Honour the OS reduced-motion preference everywhere. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .kicker {
+    @apply text-kicker font-semibold uppercase text-accent;
+  }
+
+  .surface-card {
+    @apply rounded-lg border border-line bg-surface shadow-subtle;
+  }
+
+  .hairline {
+    @apply h-px w-full bg-line;
+  }
+
+  .skeleton {
+    @apply relative overflow-hidden rounded-md bg-elevated;
+  }
+
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-surface/70 to-transparent;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
